@@ -1,0 +1,18 @@
+[Unit]
+Description=Ollisante API
+After=network.target postgresql.service
+
+[Service]
+User=ollisante
+Group=ollisante
+WorkingDirectory=/opt/ollisante
+EnvironmentFile=/etc/ollisante/ollisante.env
+ExecStart=/usr/bin/java -Xms256m -Xmx512m -jar /opt/ollisante/ollisante-backend.jar
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

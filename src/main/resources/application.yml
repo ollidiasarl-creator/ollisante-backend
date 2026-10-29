@@ -1,0 +1,121 @@
+spring:
+  application:
+    name: ollisante-backend
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ollisante}
+    username: ${DB_USER:ollisante}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:30}   # connexions PostgreSQL ouvertes en parallèle (PostgreSQL en accepte 100)
+      minimum-idle: 5
+      connection-timeout: 10000            # attente max d'une connexion libre (ms) avant de répondre « occupé »
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate   # le schéma est géré uniquement par Flyway
+  flyway:
+    enabled: true
+  # E-mails (mot de passe oublié). Serveur défini par SPRING_MAIL_HOST / _PORT / _USERNAME / _PASSWORD ;
+  # sans SPRING_MAIL_HOST, aucun e-mail n'est envoyé.
+  mail:
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: ${MAIL_SSL:true}           # port 465 ; mettre false pour le port 587 (STARTTLS)
+      mail.smtp.starttls.enable: ${MAIL_STARTTLS:false}
+      mail.smtp.connectiontimeout: 10000
+      mail.smtp.timeout: 10000
+      mail.smtp.writetimeout: 10000
+  servlet:
+    multipart:
+      max-file-size: 10MB     # images des actualités, pièces justificatives (photos de téléphone)
+      max-request-size: 11MB
+
+server:
+  port: 8088
+  tomcat:
+    threads:
+      max: 200            # requêtes traitées en parallèle
+      min-spare: 20
+    accept-count: 300     # file d'attente quand tous les fils sont occupés (au lieu de refuser)
+    max-connections: 8192
+    connection-timeout: 20s
+  error:
+    include-message: never
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  health:
+    mail:
+      enabled: false   # sinon /actuator/health se connecte au serveur SMTP à chaque appel
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+ollisante:
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      access-ttl-minutes: 15
+      refresh-ttl-days: 30
+  booking:
+    min-notice-minutes: 60        # délai minimum avant un créneau réservable
+    max-days-ahead: 60            # on ne réserve pas au-delà
+    pending-payment-minutes: 30   # un rendez-vous non payé est annulé après ce délai
+    max-pending-per-patient: 2    # rendez-vous non payés en même temps, par patient
+    max-upcoming-per-patient: 5   # rendez-vous à venir en même temps, par patient
+  otp:
+    code-ttl-minutes: 5
+    max-attempts: 5        # essais maximum par code
+    resend-seconds: 60     # délai minimum entre deux envois pour un même numéro
+    daily-limit: 5         # codes maximum par numéro et par 24 h
+  mail:
+    # Adresse d'expédition, ex. Ollisanté <noreply@ollisante.com>
+    from: ${MAIL_FROM:}
+  admin-two-step:
+    enabled: ${ADMIN_TWO_STEP_ENABLED:true}   # code e-mail à la connexion des administrateurs
+  rate-limit:
+    enabled: true
+    auth-per-minute: ${RATE_LIMIT_AUTH_PER_MINUTE:60}     # connexions / codes / inscriptions, par adresse IP
+    api-per-minute: ${RATE_LIMIT_API_PER_MINUTE:3000}     # autres appels, par adresse IP (beaucoup d abonnés mobiles partagent une IP)
+  twilio:
+    # Twilio Verify (SMS de connexion). Sans ces trois valeurs, la connexion par SMS reste désactivée.
+    account-sid: ${TWILIO_ACCOUNT_SID:}
+    auth-token: ${TWILIO_AUTH_TOKEN:}
+    verify-service-sid: ${TWILIO_VERIFY_SERVICE_SID:}
+    # Rappels de rendez-vous par SMS : service de messagerie Twilio (MG…) ou expéditeur. Vide = rappels par e-mail seulement.
+    sms-from: ${TWILIO_SMS_FROM:}
+  reminders:
+    # Rappels de rendez-vous : patient la veille (e-mail + SMS) et 2 h avant (SMS) ; récapitulatif du lendemain
+    # au médecin et à la structure à partir de 18 h (heure du pays).
+    enabled: ${REMINDERS_ENABLED:true}
+    digest-hour: 18
+  pawapay:
+    # Bac à sable : https://api.sandbox.pawapay.io ; production : https://api.pawapay.io
+    base-url: ${PAWAPAY_BASE_URL:https://api.sandbox.pawapay.io}
+    api-token: ${PAWAPAY_API_TOKEN:}
+  payments:
+    commission-percent: 15            # médecins indépendants : part OLIDIA sur ce que le patient a payé au final
+    structure-commission-percent: 10  # rendez-vous pris dans une structure (taux réglable structure par structure)
+  media:
+    # Dossier des images envoyées (relatif au dossier de travail du service : /opt/ollisante/media).
+    dir: ${MEDIA_DIR:media}
+  documents:
+    # Pièces justificatives des médecins et structures : dossier PRIVÉ (jamais servi publiquement).
+    dir: ${DOCUMENTS_DIR:documents}
+  cors:
+    # Adresses web autorisées, séparées par des virgules (ex. https://app.ollisante.com). Vide = aucune.
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:}
+  bootstrap-admin:
+    # Crée un compte administrateur au démarrage s'il n'existe pas (mot de passe ≥ 12 caractères).
+    # À retirer des variables d'environnement après le premier démarrage.
+    email: ${BOOTSTRAP_ADMIN_EMAIL:}
+    password: ${BOOTSTRAP_ADMIN_PASSWORD:}

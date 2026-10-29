@@ -1,0 +1,37 @@
+-- Les tarifs par défaut (default_fee_minor) sont volontairement vides : à définir par pays.
+INSERT INTO countries (code, name_fr, name_en, currency, dial_code) VALUES
+ ('ML', 'Mali', 'Mali', 'XOF', '+223'),
+ ('SN', 'Sénégal', 'Senegal', 'XOF', '+221'),
+ ('CI', 'Côte d''Ivoire', 'Ivory Coast', 'XOF', '+225'),
+ ('BF', 'Burkina Faso', 'Burkina Faso', 'XOF', '+226'),
+ ('NE', 'Niger', 'Niger', 'XOF', '+227'),
+ ('TG', 'Togo', 'Togo', 'XOF', '+228'),
+ ('BJ', 'Bénin', 'Benin', 'XOF', '+229'),
+ ('GN', 'Guinée', 'Guinea', 'GNF', '+224'),
+ ('CD', 'RD Congo', 'DR Congo', 'CDF', '+243'),
+ ('CM', 'Cameroun', 'Cameroon', 'XAF', '+237'),
+ ('GA', 'Gabon', 'Gabon', 'XAF', '+241'),
+ ('CG', 'Congo', 'Republic of the Congo', 'XAF', '+242'),
+ ('MA', 'Maroc', 'Morocco', 'MAD', '+212'),
+ ('DZ', 'Algérie', 'Algeria', 'DZD', '+213'),
+ ('TN', 'Tunisie', 'Tunisia', 'TND', '+216'),
+ ('NG', 'Nigeria', 'Nigeria', 'NGN', '+234'),
+ ('GH', 'Ghana', 'Ghana', 'GHS', '+233'),
+ ('KE', 'Kenya', 'Kenya', 'KES', '+254');
+
+INSERT INTO specialties (code, name_fr, name_en) VALUES
+ ('GENERAL_PRACTICE', 'Médecine générale', 'General practice'),
+ ('PEDIATRICS', 'Pédiatrie', 'Pediatrics'),
+ ('GYNECOLOGY', 'Gynécologie-obstétrique', 'Gynecology & obstetrics'),
+ ('CARDIOLOGY', 'Cardiologie', 'Cardiology'),
+ ('DERMATOLOGY', 'Dermatologie', 'Dermatology'),
+ ('OPHTHALMOLOGY', 'Ophtalmologie', 'Ophthalmology'),
+ ('DENTISTRY', 'Chirurgie dentaire', 'Dentistry'),
+ ('PSYCHIATRY', 'Psychiatrie', 'Psychiatry'),
+ ('RADIOLOGY', 'Radiologie', 'Radiology'),
+ ('ANESTHESIOLOGY', 'Anesthésie-réanimation', 'Anesthesiology'),
+ ('ENT', 'ORL', 'Ear, nose and throat'),
+ ('ORTHOPEDICS', 'Orthopédie', 'Orthopedics'),
+ ('NEUROLOGY', 'Neurologie', 'Neurology'),
+ ('UROLOGY', 'Urologie', 'Urology'),
+ ('NUTRITION', 'Nutrition', 'Nutrition');

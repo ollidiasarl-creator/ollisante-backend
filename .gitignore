@@ -1,0 +1,18 @@
+target/
+.idea/
+*.iml
+.vscode/
+.env
+*.log
+*.keystore
+*.jks
+
+# Ollisanté : jamais dans le dépôt
+# - comptes de test et réglages de la machine locale
+src/main/resources/application-local.yml
+# - fichiers envoyés en local (images, pièces justificatives)
+media/
+documents/
+# - site et administration préparés pour la mise en ligne (recréés par « npm run build »)
+src/main/resources/static/site/
+src/main/resources/static/admin/
